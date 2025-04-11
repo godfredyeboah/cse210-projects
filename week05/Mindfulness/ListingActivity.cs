@@ -1,49 +1,35 @@
 using System;
-using System.Threading;
+using System.Collections.Generic;
 
-class ListingActivity : Activity
+public class ListingActivity : Activity
 {
-    public ListingActivity() : base("Listing", "This activity will help you reflect on the good things in your life by having you list as many things as you can.")
+    private string[] _prompts = { 
+        "List the things you are grateful for today.", 
+        "List some goals you want to achieve." 
+    };
+
+    public ListingActivity(int duration, string location) 
+        : base("Listing Exercise", "Write down as many things as you can related to the prompt.", duration, location) {}
+
+    public void Start()
     {
-    }
+        StartActivity();
+        Random rand = new Random();
+        Console.WriteLine($"\n{_prompts[rand.Next(_prompts.Length)]}\n");
+        Console.WriteLine("You have " + GetDuration() + " seconds to write your answers.");
+        
+        List<string> userResponses = new List<string>();
+        DateTime endTime = DateTime.Now.AddSeconds(GetDuration());
 
-    public override void Start()
-    {
-        base.Start();
-
-        Console.WriteLine("This activity will help you reflect on the good things in your life by having you list as many things as you can.");
-        ShowCountdown(_duration);
-
-        // Prompt for listing items
-        string prompt = "List as many things as you can think of related to 'Who are people that you appreciate?'";
-        Console.WriteLine(prompt);
-
-        // Start the listing process
-        ListItems(_duration);
-
-        // Ending message
-        Console.WriteLine("Good job! You've completed the Listing Activity!");
-        EndActivity();
-    }
-
-    private void ListItems(int duration)
-    {
-        DateTime endTime = DateTime.Now.AddSeconds(duration);
-        int itemCount = 0;
-
-        // Allow user to keep listing items until the time is up
         while (DateTime.Now < endTime)
         {
-            Console.Write("Enter an item (or type 'done' to finish): ");
-            string userInput = Console.ReadLine();
-
-            if (userInput.ToLower() == "done")
-                break;
-
-            itemCount++;
+            Console.Write("→ ");
+            string response = Console.ReadLine();
+            if (!string.IsNullOrWhiteSpace(response))
+                userResponses.Add(response);
         }
 
-        // Show how many items they listed
-        Console.WriteLine($"You listed {itemCount} items.");
+        Console.WriteLine($"\nYou listed {userResponses.Count} items.");
+        EndActivity();
     }
 }

@@ -7,59 +7,46 @@ namespace MindfulnessApp
     {
         static void Main(string[] args)
         {
-            // Menu for the user to choose an activity
             while (true)
             {
                 Console.Clear();
-                Console.WriteLine("Select an activity:");
-                Console.WriteLine("1. Breathing Activity");
-                Console.WriteLine("2. Reflection Activity");
-                Console.WriteLine("3. Listing Activity");
+                Console.WriteLine("Mindfulness Activities");
+                Console.WriteLine("1. Breathing Exercise");
+                Console.WriteLine("2. Reflection Exercise");
+                Console.WriteLine("3. Listing Exercise");
                 Console.WriteLine("4. Exit");
+                Console.Write("Choose an activity: ");
 
                 string choice = Console.ReadLine();
+                Console.Clear();
+
+                if (choice == "4") break;
+
+                Console.Write("Enter duration (seconds): ");
+                int duration = int.Parse(Console.ReadLine());
+
+                Console.Write("Enter location (e.g., home, park, office): ");
+                string location = Console.ReadLine();
 
                 switch (choice)
                 {
                     case "1":
-                        StartBreathingActivity();
+                        new BreathingActivity(duration, location).Start();
                         break;
-
                     case "2":
-                        StartReflectionActivity();
+                        new ReflectionActivity(duration, location).Start();
                         break;
-
                     case "3":
-                        StartListingActivity();
+                        new ListingActivity(duration, location).Start();
                         break;
-
-                    case "4":
-                        Console.WriteLine("Thank you for using the Mindfulness App. Goodbye!");
-                        return;
-
                     default:
-                        Console.WriteLine("Invalid choice. Please select a valid activity.");
+                        Console.WriteLine("Invalid choice. Try again.");
                         break;
                 }
+
+                Console.WriteLine("\nPress Enter to continue...");
+                Console.ReadLine();
             }
-        }
-
-        static void StartBreathingActivity()
-        {
-            BreathingActivity breathingActivity = new BreathingActivity();
-            breathingActivity.Start();
-        }
-
-        static void StartReflectionActivity()
-        {
-            ReflectionActivity reflectionActivity = new ReflectionActivity();
-            reflectionActivity.Start();
-        }
-
-        static void StartListingActivity()
-        {
-            ListingActivity listingActivity = new ListingActivity();
-            listingActivity.Start();
         }
     }
 }

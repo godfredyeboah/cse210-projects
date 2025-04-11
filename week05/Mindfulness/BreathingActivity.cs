@@ -1,22 +1,22 @@
 using System;
 using System.Threading;
 
-class BreathingActivity : Activity
+public class BreathingActivity : Activity
 {
-    public BreathingActivity() : base("Breathing", "This activity will help you relax by walking you through breathing in and out slowly. Clear your mind and focus on your breathing.")
+    public BreathingActivity(int duration, string location) 
+        : base("Breathing Exercise", "Breathe in... Hold... Breathe out.", duration, location) {}
+
+    public void Start()
     {
-    }
+        StartActivity();
+        for (int i = 0; i < GetDuration() / 4; i++)
+        {
+            Console.WriteLine("\n🌬️ Breathe in...");
+            ShowCountdown(5);
 
-    public override void Start()  // Renamed from StartBreathing to Start to follow consistency.
-    {
-        base.Start();
-
-        Console.WriteLine("\n🌬️ Breathe in...");
-        ShowCountdown(5);
-
-        Console.WriteLine("😌 Breathe out...");
-        ShowCountdown(5);
-
+            Console.WriteLine("😌 Breathe out...");
+            ShowCountdown(5);
+        }
         EndActivity();
     }
 }

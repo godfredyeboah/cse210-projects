@@ -2,70 +2,67 @@ using System;
 using System.IO;
 using System.Threading;
 
-class Activity
+public class Activity
 {
-    protected string _name;
-    protected string _description;
-    protected int _duration;
-    protected string _location;
+    private string _name;
+    private string _description;
+    private int _duration;
+    private string _location;
 
-    public Activity(string name, string description)
+    public Activity(string name, string description, int duration, string location)
     {
         _name = name;
         _description = description;
-        _location = GetLocation();
+        _duration = duration;
+        _location = location;
     }
 
-    public virtual void Start()  // Changed from StartActivity to Start to maintain consistency.
+    // Getters (Encapsulation)
+    protected string GetName() => _name;
+    protected string GetDescription() => _description;
+    protected int GetDuration() => _duration;
+    protected string GetLocation() => _location;
+
+    public void StartActivity()
     {
         Console.Clear();
-        Console.WriteLine($"🌟 {_name} Activity 🌟");
-        Console.WriteLine($"\n{_description}\n");
-
-        Console.Write("⏳ Enter duration (seconds): ");
-        _duration = int.Parse(Console.ReadLine());
-
-        Console.WriteLine("\n🛑 Get ready...");
-        ShowSpinner(3);
+        Console.WriteLine($"Starting: {GetName()}");
+        Console.WriteLine(GetDescription());
+        Console.WriteLine($"Duration: {GetDuration()} seconds\n");
+        ShowCountdown(3);
     }
 
     public void EndActivity()
     {
-        Console.WriteLine("\n🎉 Great job! You completed the activity.");
-        Console.WriteLine($"📌 Activity: {_name} | ⏳ Duration: {_duration}s | 📍 Location: {_location}");
-        ShowSpinner(3);
+        Console.WriteLine("\nGood job! You have completed the activity.");
         LogActivity();
-    }
-
-    protected void ShowSpinner(int seconds)
-    {
-        string[] spinner = { "|", "/", "-", "\\" };
-        for (int i = 0; i < seconds * 4; i++)
-        {
-            Console.Write($"\r{spinner[i % 4]}");
-            Thread.Sleep(250);
-        }
-        Console.Write("\r ");
+        ShowCountdown(2);
     }
 
     protected void ShowCountdown(int seconds)
     {
         for (int i = seconds; i > 0; i--)
         {
-            Console.Write($"\r⏳ {i} ");
+            Console.Write($"\rStarting in {i}...");
             Thread.Sleep(1000);
         }
-        Console.Write("\r    \r"); // Clears the countdown text
+        Console.WriteLine();
     }
 
-    protected void LogActivity()
+    protected void ShowSpinner(int seconds)
     {
-        string logEntry = $"{DateTime.Now} | {_name} | {_duration}s | {_location}";
+        char[] spinner = { '|', '/', '-', '\\' };
+        for (int i = 0; i < seconds * 2; i++)
+        {
+            Console.Write($"\r{spinner[i % 4]}");
+            Thread.Sleep(500);
+        }
+        Console.WriteLine();
+    }
+
+    private void LogActivity()
+    {
+        string logEntry = $"{DateTime.Now}: Completed {GetName()} at {GetLocation()} for {GetDuration()} seconds.";
         File.AppendAllText("ActivityLog.txt", logEntry + Environment.NewLine);
-    }
-
-    private string GetLocation()
-    {
-        return "Accra, Ghana"; // Placeholder, could integrate actual location API in future
     }
 }
